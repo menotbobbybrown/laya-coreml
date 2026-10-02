@@ -42,7 +42,9 @@ def validate(directory, reference_path, repeats):
     repeat_cases = []
     for entry in reference["cases"]:
         items, _ = agent.prepare(entry["state"], entry["questions"])
-        if items != entry["items"]:
+        if [{key: item[key] for key in ("ids", "markers", "qtype")} for item in items] != entry[
+            "items"
+        ]:
             raise AssertionError("Prompt tokens changed during packaging")
         if any(
             len(i["ids"]) > agent.shape["max_length"]
@@ -73,7 +75,10 @@ def validate(directory, reference_path, repeats):
                     ),
                 )
         result = agent.predict(entry["state"], entry["questions"])
-        if result["usage"] != entry["result"]["usage"]:
+        if any(
+            result["usage"][key] != entry["result"]["usage"][key]
+            for key in ("input_tokens", "output_tokens")
+        ):
             raise AssertionError("Token usage changed during packaging")
         repeat_cases.append((entry["state"], entry["questions"], result))
         report["cases"].append(

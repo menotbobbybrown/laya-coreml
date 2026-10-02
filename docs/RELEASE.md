@@ -126,3 +126,20 @@ wheel check runs with `scripts/wheel_smoke.py --hub-check` in a fresh environmen
 from outside the source tree, after downloading or preparing the six bundles.
 See [SNAKE_BENCHMARKS.md](SNAKE_BENCHMARKS.md) for complete game-loop measurements
 and [LAUNCH.md](LAUNCH.md) for the exact recorded media sources.
+
+
+## 0.2.0 upstream synchronization
+
+This release ports applicable prompt validation, custom noul labels, Unicode
+instructions, conversation-tail truncation, option-collapse diagnostics and
+answer-confidence reporting through upstream `4aa6761`. It also publishes the
+temperature clamp that was present in source 0.1.1 but absent from PyPI 0.1.0.
+Core ML graph signatures, weights and ANE capacity checks are unchanged.
+Historical benchmark results above describe 0.1.0, not a new performance run.
+Mixed-question latency and Intel Mac support have not been validated by this sync.
+
+Push a `v<version>` tag after updating `pyproject.toml`, `laya_coreml/__init__.py`
+and `uv.lock`. The Release workflow runs the reusable CI checks, verifies all
+three versions against the tag, builds and validates wheel/sdist, publishes to
+PyPI using the repository secret `PYPI_API_TOKEN`, and creates a GitHub release
+with the same distributions. CI failure prevents publishing.

@@ -1,5 +1,22 @@
 ![Laya Core ML playing Snake with real local model probabilities](https://raw.githubusercontent.com/mizorewww/laya-coreml/main/docs/assets/snake-demo.gif)
 
+Version 0.2.0 synchronizes applicable prompt and result fixes through upstream
+`4aa6761` (source version 0.3.23). Both Core ML and ANE runtimes accept custom
+`noul` display labels (`{"false": "no", "true": "yes"}`), validate questions with
+question-specific errors, and preserve Unicode structured instructions. Long
+conversation lists retain their newest tokens; strings and objects retain their
+beginning. `usage` reports state truncation and, when present, collapsed options.
+`answer_confidence` is the highest answer probability; existing `confidence`
+semantics remain unchanged. Neither field establishes calibration accuracy.
+The checkpoint temperature clamp documented below is included in this release.
+Exported graph capacity limits still raise errors rather than silently clipping.
+
+Maintenance follows upstream Laya fixes applicable to these runtimes. New runtime
+features and backend-specific optimization proposals require an upstream-aligned
+implementation and validation; closing an issue does not establish that its
+reported behavior is fixed.
+
+
 # Laya-CoreML
 
 **Open-weight typed decisions on Apple Silicon. Core ML, Neural Engine, zero generated tokens.**

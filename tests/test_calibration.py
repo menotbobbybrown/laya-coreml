@@ -27,6 +27,8 @@ from laya_coreml.common import (
         (0.0, TEMP_MIN),
         (-3.0, TEMP_MIN),
         (None, 1.0),
+        (False, 1.0),
+        (True, 1.0),
         ("x", 1.0),
         (float("nan"), 1.0),
         (float("inf"), 1.0),

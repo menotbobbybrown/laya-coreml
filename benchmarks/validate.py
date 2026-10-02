@@ -48,7 +48,9 @@ def main():
     expected = []
     for entry in reference["cases"]:
         items, _ = agent.prepare(entry["state"], entry["questions"])
-        if items != entry["items"]:
+        if [{key: item[key] for key in ("ids", "markers", "qtype")} for item in items] != entry[
+            "items"
+        ]:
             raise AssertionError(f"Input tokens differ: {entry['name']}")
         if max(len(i["ids"]) for i in items) > agent.shape["max_length"]:
             report["cases"].append(
@@ -98,7 +100,10 @@ def main():
                 )
                 total, agreements = total + 1, agreements + agree
         result = agent.predict(entry["state"], entry["questions"])
-        if result["usage"] != entry["result"]["usage"]:
+        if any(
+            result["usage"][key] != entry["result"]["usage"][key]
+            for key in ("input_tokens", "output_tokens")
+        ):
             raise AssertionError("Token accounting mismatch")
         case["public_result_equal"] = result == entry["result"]
         report["cases"].append(case)

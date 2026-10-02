@@ -20,3 +20,8 @@ The model follows Laya's DecisionModel and Hugging Face Transformers ModernBERT.
 Original checkpoint weights belong to their respective upstream authors and
 are downloaded separately. No weights are included in this repository.
 This is an independent project, not an official Convai Innovations or Apple release.
+
+Selected prompt validation, noul labels, truncation diagnostics and answer-confidence
+fixes synchronized through upstream 4aa6761be8173de4ce6d92c31b3e40b6eaf59a7c,
+via laya-mlx ca5940aa9286dbbdfaacbecbdb7b337295ad36a2.
+The architecture and model weights remain based on the original pinned revision.

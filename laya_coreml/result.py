@@ -2,7 +2,7 @@
 
 import numpy as np
 
-from .common import confidence_from_probs, temp_bucket
+from .common import answer_confidence, collapsed_options, confidence_from_probs, temp_bucket
 from .inputs import collate_items
 
 
@@ -35,6 +35,7 @@ class ResultMixin:
                 p /= p.sum()
                 answer = {
                     "type": q["t"],
+                    "answer_confidence": round(answer_confidence(p, k), 4),
                     "confidence": round(confidence_from_probs(p, k), 4),
                     "action": {"act_probability": round(float(act[row, 0]), 4)},
                 }
@@ -56,10 +57,23 @@ class ResultMixin:
                         confidence=round(max(float(p[1]), 1.0 - float(p[1])), 4),
                     )
                 answers[qid] = answer
+        stats = [item["state_stats"] for item in items]
+        dropped = max((s["state_tokens_dropped"] for s in stats), default=0)
+        usage = {
+            "input_tokens": sum(len(item["ids"]) for item in items),
+            "output_tokens": 0,
+            "state_tokens": stats[0]["state_tokens"] if stats else 0,
+            "state_tokens_dropped": dropped,
+            "truncated": dropped > 0,
+            "truncated_questions": [qid for qid, s in zip(question_ids, stats) if s["truncated"]],
+        }
+        collapsed = collapsed_options(question_ids, items)
+        if collapsed:
+            usage["options"] = collapsed
         return {
             "model": "laya-rl-agent",
             "answers": answers,
-            "usage": {"input_tokens": sum(len(item["ids"]) for item in items), "output_tokens": 0},
+            "usage": usage,
         }
 
     predict = system_one
